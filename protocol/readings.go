@@ -80,12 +80,18 @@ func (v *VNA) GetSingleWave(trace string) (WaveForm, error) {
 	} else if err := v.TriggerSweep(); err != nil {
 		return WaveForm{}, err
 	}
-
 	return v.GetSData()
 }
 
 func (v *VNA) GetSData() (WaveForm, error) {
 	var waveform WaveForm
+
+	if err := v.WriteSequence([]string{
+		"FORMat:DATA REAL,32",
+		"FORMat:BORDer SWAPped",
+	}); err != nil {
+		return waveform, err
+	}
 
 	data, err := v.QueryByteSequence("CALC:DATA? SDATA")
 	if err != nil {

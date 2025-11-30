@@ -7,7 +7,9 @@ import (
 )
 
 /*
-Converts a byte array to an array of float64 values
+Converts a byte array to an array of float64 values. This
+function considers a little endian border with real data of
+32 bits (single precision)
 */
 func (v *VNA) ByteToFloatArray(payload []byte) ([]float64, error) {
 	if len(payload)%4 != 0 {

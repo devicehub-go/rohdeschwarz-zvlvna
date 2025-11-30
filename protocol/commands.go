@@ -38,3 +38,20 @@ func (v *VNA) TriggerSweep() error {
 	}
 	return v.WaitOperationComplete()
 }
+
+/*
+Set the device to operate in continuos or single sweep mode
+*/
+func (v *VNA) SetContinuosSweep(status bool) error {
+	statusStr := "OFF"
+	if status {
+		statusStr = "ON"
+	}
+	if err := v.WriteSequence([]string{
+		"INITiate1:SCOPe SINGle",
+		fmt.Sprintf("INITiate:CONTinuous %s", statusStr),
+	}); err != nil {
+		return err
+	}
+	return v.WaitOperationComplete()
+}
