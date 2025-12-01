@@ -87,7 +87,7 @@ func (v *VNA) GetSData(trace string) (WaveForm, error) {
 		return WaveForm{}, err
 	} else if err := v.WriteSequence([]string{
 		"FORMat:DATA REAL,32",
-		"FORMat:BORDer SWAPped",
+		"FORMat:BORDer NORMal",
 	}); err != nil {
 		return waveform, err
 	}

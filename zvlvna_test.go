@@ -14,7 +14,7 @@ func TestGetMeasurement(t *testing.T) {
 	vna := zvlvna.New(unicomm.Options{
 		Protocol: unicomm.TCP,
 		TCP: unicommtcp.TCPOptions{
-			Host:         "10.0.4.148",
+			Host:         "169.254.21.159",
 			Port:         5025,
 			ReadTimeout:  2 * time.Second,
 			WriteTimeout: 2 * time.Second,
@@ -25,15 +25,16 @@ func TestGetMeasurement(t *testing.T) {
 	}
 	defer vna.Disconnect()
 
+	vna.Reset()
 	vna.Write("*CLS")
-	vna.SetSweep(201)
+	vna.SetSweep(101)
+	vna.SetContinuosSweep(true)
 
 	start := time.Now()
-	wave, err := vna.GetSingleWave("Trc1")
+	_, err := vna.GetSData("Trc1")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(len(wave.Real))
 	fmt.Println(time.Since(start))
 	fmt.Println(vna.GetErrors())
 }
