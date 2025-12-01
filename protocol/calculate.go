@@ -36,7 +36,7 @@ func (v *VNA) CreateTrace(name, parameter string) error {
 	valid := []string{"S11", "S12", "S21", "S22"}
 	if !slices.Contains(valid, parameter) {
 		return fmt.Errorf(
-			"parameter must be %s, got '%s'", 
+			"parameter must be %s, got '%s'",
 			strings.Join(valid, ", "), parameter,
 		)
 	}
@@ -59,7 +59,6 @@ func (v *VNA) SelectTrace(trace string) error {
 	message := fmt.Sprintf("CALCulate1:PARameter:SELect '%s'", trace)
 	return v.Write(message)
 }
-
 
 /*
 Sets marker to a trace

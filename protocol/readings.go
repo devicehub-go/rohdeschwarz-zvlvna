@@ -43,12 +43,11 @@ func (v *VNA) GetPreamble() (Preamble, error) {
 	if err != nil {
 		return preamble, err
 	}
-	fmt.Println("start", response)
 	preamble.StartFreq, err = strconv.ParseFloat(string(response), 64)
 	if err != nil {
 		return preamble, err
 	}
-	response, err = v.Query("SENS1:FREQ:STOP?")
+	response, err = v.Query(":FREQ:STOP?")
 	if err != nil {
 		return preamble, err
 	}
@@ -56,7 +55,7 @@ func (v *VNA) GetPreamble() (Preamble, error) {
 	if err != nil {
 		return preamble, err
 	}
-	response, err = v.Query("SENS1:SWE:POIN?")
+	response, err = v.Query(":SWE:POIN?")
 	if err != nil {
 		return preamble, err
 	}
@@ -75,18 +74,18 @@ the acquired data from the device
 func (v *VNA) GetSingleWave(trace string) (WaveForm, error) {
 	if err := v.SetContinuosSweep(false); err != nil {
 		return WaveForm{}, err
-	} else if err := v.SelectTrace(trace); err != nil {
-		return WaveForm{}, err
 	} else if err := v.TriggerSweep(); err != nil {
 		return WaveForm{}, err
 	}
-	return v.GetSData()
+	return v.GetSData(trace)
 }
 
-func (v *VNA) GetSData() (WaveForm, error) {
+func (v *VNA) GetSData(trace string) (WaveForm, error) {
 	var waveform WaveForm
 
-	if err := v.WriteSequence([]string{
+	if err := v.SelectTrace(trace); err != nil {
+		return WaveForm{}, err
+	} else if err := v.WriteSequence([]string{
 		"FORMat:DATA REAL,32",
 		"FORMat:BORDer SWAPped",
 	}); err != nil {
